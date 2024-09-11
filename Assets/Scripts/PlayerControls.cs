@@ -14,17 +14,19 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private float rayCastDistance = .25f;
     private float yVelocity = 0f;
     private Vector3 movementVector = new Vector3();
+    private Vector3 originalPosition;
     
     // Start is called before the first frame update
     void Start()
     {
-
+        originalPosition = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
         JumpingControls();
+        ResetPosition();
     }
 
     void FixedUpdate()
@@ -55,5 +57,13 @@ public class PlayerControls : MonoBehaviour
 
         characterController.Move(Vector3.up * yVelocity * Time.deltaTime);
         yVelocity += Physics.gravity.y * gravityScale * Time.deltaTime;
+    }
+
+    void ResetPosition(){
+        if(Input.GetKeyDown(KeyCode.R)){
+            characterController.enabled = false;
+            transform.position = originalPosition;
+            characterController.enabled = true;
+        }
     }
 }
