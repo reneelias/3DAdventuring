@@ -5,10 +5,15 @@ using UnityEngine;
 public class PlayerControls : MonoBehaviour
 {
     [SerializeField] private CharacterController characterController;
+    [Header("Physics")]
     [SerializeField] private float movementSpeed = .5f;
     [SerializeField] private float gravityScale = .5f;
     [SerializeField] private float jumpSpeed = 3f;
+    [Header("Jumping Raycast")]
+    [SerializeField] private float rayCastOffsetScale = .75f;
+    [SerializeField] private float rayCastDistance = .25f;
     private float yVelocity = 0f;
+    private Vector3 movementVector = new Vector3();
     
     // Start is called before the first frame update
     void Start()
@@ -24,8 +29,13 @@ public class PlayerControls : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 movementVector = new Vector3();
+        MovementControls();
+        JumpingControls();
+    }
 
+    void MovementControls(){
+        movementVector = new Vector3();
+        
         if(Input.GetKey(KeyCode.W)){
             movementVector += Vector3.forward;
         } else if(Input.GetKey(KeyCode.S)){
@@ -37,15 +47,14 @@ public class PlayerControls : MonoBehaviour
         } 
         movementVector = movementVector.normalized * movementSpeed;
         characterController.Move(movementVector);
+    }
 
-        if(characterController.velocity.y == 0f) {
-            if(Input.GetKey(KeyCode.Space)){
-                yVelocity = jumpSpeed;
-            }
+    void JumpingControls(){
+        if(Input.GetKey(KeyCode.Space) && Physics.Raycast(new Ray(transform.position + Vector3.down * rayCastOffsetScale, Vector3.down), rayCastDistance)){
+            yVelocity = jumpSpeed;
         }
 
         characterController.Move(Vector3.up * yVelocity * Time.fixedDeltaTime);
         yVelocity += Physics.gravity.y * gravityScale * Time.fixedDeltaTime;
-        // characterController.Move(Physics.gravity * gravityScale * Time.fixedDeltaTime);
     }
 }
