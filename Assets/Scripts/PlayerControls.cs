@@ -24,13 +24,12 @@ public class PlayerControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        JumpingControls();
     }
 
     void FixedUpdate()
     {
         MovementControls();
-        JumpingControls();
     }
 
     void MovementControls(){
@@ -50,11 +49,11 @@ public class PlayerControls : MonoBehaviour
     }
 
     void JumpingControls(){
-        if(Input.GetKey(KeyCode.Space) && Physics.Raycast(new Ray(transform.position + Vector3.down * rayCastOffsetScale, Vector3.down), rayCastDistance)){
+        if(Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(new Ray(transform.position + Vector3.down * rayCastOffsetScale, Vector3.down), rayCastDistance)){
             yVelocity = jumpSpeed;
         }
 
-        characterController.Move(Vector3.up * yVelocity * Time.fixedDeltaTime);
-        yVelocity += Physics.gravity.y * gravityScale * Time.fixedDeltaTime;
+        characterController.Move(Vector3.up * yVelocity * Time.deltaTime);
+        yVelocity += Physics.gravity.y * gravityScale * Time.deltaTime;
     }
 }

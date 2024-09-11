@@ -577,7 +577,7 @@ MonoBehaviour:
   characterController: {fileID: 942190784}
   movementSpeed: 0.25
   gravityScale: 1
-  jumpSpeed: 4
+  jumpSpeed: 5
   rayCastOffsetScale: 0.75
   rayCastDistance: 0.35
 --- !u!1 &1795602476
@@ -679,7 +679,7 @@ Transform:
   m_GameObject: {fileID: 1795602476}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.54, z: -3.14}
+  m_LocalPosition: {x: 0, y: 0.54, z: 2.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
