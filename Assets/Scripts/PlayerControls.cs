@@ -18,6 +18,7 @@ public class PlayerControls : MonoBehaviour
     private float yVelocity = 0f;
     private Vector3 movementVector = new Vector3();
     private Vector3 originalPosition;
+    private Vector3 forwardMovementDirection = Vector3.forward;
     
     // Start is called before the first frame update
     void Start()
@@ -53,8 +54,11 @@ public class PlayerControls : MonoBehaviour
         } 
         if(Input.GetKey(KeyCode.D)){
             movementVector += Vector3.right;
-        } 
+        }
+
         movementVector = movementVector.normalized * movementSpeed;
+        movementVector = Quaternion.Euler(0f, forwardMovementDirection.y, 0f) * movementVector;
+
         characterController.Move(movementVector);
     }
 
@@ -78,9 +82,11 @@ public class PlayerControls : MonoBehaviour
     void TurningControls(){
         if(Input.GetKey(KeyCode.LeftArrow)){
             transform.eulerAngles += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
+            forwardMovementDirection += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
         }
         if(Input.GetKey(KeyCode.RightArrow)){
             transform.eulerAngles += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
+            forwardMovementDirection += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
         }
     }
 }
