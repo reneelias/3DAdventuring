@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerControls : MonoBehaviour
 {
     [SerializeField] private CharacterController characterController;
+    [SerializeField] private Color materialColor;
     [Header("Physics")]
     [SerializeField] private float movementSpeed = .5f;
     [SerializeField] private float gravityScale = .5f;
@@ -20,6 +21,7 @@ public class PlayerControls : MonoBehaviour
     void Start()
     {
         originalPosition = transform.position;
+        GetComponent<Renderer>().material.color = materialColor;
     }
 
     // Update is called once per frame
