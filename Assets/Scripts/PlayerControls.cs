@@ -13,6 +13,8 @@ public class PlayerControls : MonoBehaviour
     [Header("Jumping Raycast")]
     [SerializeField] private float rayCastOffsetScale = .75f;
     [SerializeField] private float rayCastDistance = .25f;
+    [Header("Turning")]
+    [SerializeField] private float turningSpeed = 1f;
     private float yVelocity = 0f;
     private Vector3 movementVector = new Vector3();
     private Vector3 originalPosition;
@@ -34,6 +36,7 @@ public class PlayerControls : MonoBehaviour
     void FixedUpdate()
     {
         MovementControls();
+        TurningControls();
     }
 
     void MovementControls(){
@@ -41,11 +44,14 @@ public class PlayerControls : MonoBehaviour
         
         if(Input.GetKey(KeyCode.W)){
             movementVector += Vector3.forward;
-        } else if(Input.GetKey(KeyCode.S)){
+        } 
+        if(Input.GetKey(KeyCode.S)){
             movementVector += Vector3.back;
-        } else if(Input.GetKey(KeyCode.A)){
+        }
+        if(Input.GetKey(KeyCode.A)){
             movementVector += Vector3.left;
-        } else if(Input.GetKey(KeyCode.D)){
+        } 
+        if(Input.GetKey(KeyCode.D)){
             movementVector += Vector3.right;
         } 
         movementVector = movementVector.normalized * movementSpeed;
@@ -66,6 +72,15 @@ public class PlayerControls : MonoBehaviour
             characterController.enabled = false;
             transform.position = originalPosition;
             characterController.enabled = true;
+        }
+    }
+
+    void TurningControls(){
+        if(Input.GetKey(KeyCode.LeftArrow)){
+            transform.eulerAngles += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
+        }
+        if(Input.GetKey(KeyCode.RightArrow)){
+            transform.eulerAngles += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
         }
     }
 }
