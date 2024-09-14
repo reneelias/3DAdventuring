@@ -15,6 +15,7 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private float rayCastDistance = .25f;
     [Header("Turning")]
     [SerializeField] private float turningSpeed = 1f;
+    [SerializeField] private float mouseTurnSpeed = 5f;
     private float yVelocity = 0f;
     private Vector3 movementVector = new Vector3();
     private Vector3 originalPosition;
@@ -32,12 +33,12 @@ public class PlayerControls : MonoBehaviour
     {
         JumpingControls();
         ResetPosition();
+        TurningControls();
     }
 
     void FixedUpdate()
     {
         MovementControls();
-        TurningControls();
     }
 
     void MovementControls(){
@@ -80,13 +81,20 @@ public class PlayerControls : MonoBehaviour
     }
 
     void TurningControls(){
-        if(Input.GetKey(KeyCode.LeftArrow)){
-            transform.eulerAngles += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
-            forwardMovementDirection += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
+        float axisMouseX = Input.GetAxis("Mouse X");
+        if(axisMouseX != 0 && Input.GetMouseButton(1)){
+            transform.eulerAngles += new Vector3(0, axisMouseX * mouseTurnSpeed * Time.deltaTime, 0f);
+            forwardMovementDirection += new Vector3(0, axisMouseX * mouseTurnSpeed * Time.deltaTime, 0f);
+        } else {
+            if(Input.GetKey(KeyCode.LeftArrow)){
+                transform.eulerAngles += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
+                forwardMovementDirection += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
+            }
+            if(Input.GetKey(KeyCode.RightArrow)){
+                transform.eulerAngles += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
+                forwardMovementDirection += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
+            }
         }
-        if(Input.GetKey(KeyCode.RightArrow)){
-            transform.eulerAngles += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
-            forwardMovementDirection += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
-        }
+        
     }
 }
