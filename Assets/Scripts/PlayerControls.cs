@@ -7,9 +7,15 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Color materialColor;
     [Header("Physics")]
-    [SerializeField] private float movementSpeed = .5f;
+    [Tooltip("How quickly the player picks up speed.")]
+    [SerializeField] private float movementSpeed = .05f;
     [SerializeField] private float gravityScale = .5f;
     [SerializeField] private float jumpSpeed = 3f;
+    [Tooltip("That maximum speed that the player can move it using directional input.")]
+    [SerializeField] private float moveVelMaxSpeed = 1f;
+    [Tooltip("Scale by which velocity will be multiplied each update when no movement input detected.")]
+    [SerializeField] private float moveVelSlowRate = .1f;
+    private Vector3 moveVelocity = Vector3.zero;
     [Header("Jumping Raycast")]
     [SerializeField] private GameObject raycastPointsParent;
     [SerializeField] private float rayCastDistance = .25f;
@@ -57,10 +63,20 @@ public class PlayerControls : MonoBehaviour
             movementVector += Vector3.right;
         }
 
-        movementVector = movementVector.normalized * movementSpeed;
-        movementVector = Quaternion.Euler(0f, forwardMovementDirection.y, 0f) * movementVector;
+        if(movementVector.magnitude == 0f){
+            if(moveVelocity.magnitude > 0f){
+                moveVelocity *= moveVelSlowRate;
+            }
+        } else {
+            movementVector = movementVector.normalized * movementSpeed;
+            movementVector = Quaternion.Euler(0f, forwardMovementDirection.y, 0f) * movementVector;
+            moveVelocity += movementVector;
+            if(moveVelocity.magnitude > moveVelMaxSpeed){
+                moveVelocity = moveVelocity.normalized * moveVelMaxSpeed;
+            }
+        }
 
-        characterController.Move(movementVector);
+        characterController.Move(moveVelocity);
     }
 
     void JumpingControls(){
