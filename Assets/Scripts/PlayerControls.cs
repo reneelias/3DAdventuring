@@ -11,7 +11,7 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private float gravityScale = .5f;
     [SerializeField] private float jumpSpeed = 3f;
     [Header("Jumping Raycast")]
-    [SerializeField] private float rayCastOffsetScale = .75f;
+    [SerializeField] private GameObject raycastPointsParent;
     [SerializeField] private float rayCastDistance = .25f;
     [Header("Turning")]
     [SerializeField] private float turningSpeed = 1f;
@@ -64,8 +64,13 @@ public class PlayerControls : MonoBehaviour
     }
 
     void JumpingControls(){
-        if(Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(new Ray(transform.position + Vector3.down * rayCastOffsetScale, Vector3.down), rayCastDistance)){
-            yVelocity = jumpSpeed;
+        if(Input.GetKeyDown(KeyCode.Space)){
+            foreach(Transform transform in raycastPointsParent.transform){
+                if(Physics.Raycast(new Ray(transform.position, Vector3.down), rayCastDistance)){
+                    yVelocity = jumpSpeed;
+                    break;
+                }
+            }
         }
 
         characterController.Move(Vector3.up * yVelocity * Time.deltaTime);
