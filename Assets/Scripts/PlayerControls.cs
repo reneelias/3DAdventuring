@@ -19,10 +19,11 @@ public class PlayerControls : MonoBehaviour
     [Header("Jumping Raycast")]
     [SerializeField] private GameObject raycastPointsParent;
     [SerializeField] private float rayCastDistance = .25f;
+    private bool grounded = false;
     [Header("Turning")]
     [SerializeField] private float turningSpeed = 1f;
     [SerializeField] private float mouseTurnSpeed = 5f;
-    private float yVelocity = 0f;
+    private float upVelocity = 0f;
     private Vector3 movementVector = new Vector3();
     private Vector3 originalPosition;
     private Vector3 forwardMovementDirection = Vector3.forward;
@@ -80,17 +81,30 @@ public class PlayerControls : MonoBehaviour
     }
 
     void JumpingControls(){
-        if(Input.GetKeyDown(KeyCode.Space)){
-            foreach(Transform transform in raycastPointsParent.transform){
-                if(Physics.Raycast(new Ray(transform.position, Vector3.down), rayCastDistance)){
-                    yVelocity = jumpSpeed;
-                    break;
+        int i = 0;
+        foreach(Transform transform in raycastPointsParent.transform){
+            if(Physics.Raycast(new Ray(transform.position, Vector3.down), rayCastDistance)){
+                if(!grounded){
+                    upVelocity = 0f;
                 }
+                grounded = true;
+                break;
             }
+            i++;
+        }
+        if(i == raycastPointsParent.transform.childCount){
+            grounded = false;
         }
 
-        characterController.Move(Vector3.up * yVelocity * Time.deltaTime);
-        yVelocity += Physics.gravity.y * gravityScale * Time.deltaTime;
+        if(grounded){
+            if(Input.GetKeyDown(KeyCode.Space)){
+                upVelocity = jumpSpeed;
+            }
+        } else {
+            upVelocity += Physics.gravity.y * gravityScale * Time.deltaTime;
+        }
+        
+        characterController.Move(Vector3.up * upVelocity * Time.deltaTime);
     }
 
     void ResetPosition(){
@@ -98,6 +112,7 @@ public class PlayerControls : MonoBehaviour
             characterController.enabled = false;
             transform.position = originalPosition;
             characterController.enabled = true;
+            // yVelocity = 0f;
         }
     }
 

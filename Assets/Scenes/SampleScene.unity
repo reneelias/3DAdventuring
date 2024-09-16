@@ -631,6 +631,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3531255732513161843, guid: c11ff60ca37e2ea448282d308c757f88,
         type: 3}
+      propertyPath: rayCastDistance
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3531255732513161843, guid: c11ff60ca37e2ea448282d308c757f88,
+        type: 3}
       propertyPath: moveVelMaxMagnitude
       value: 0.4
       objectReference: {fileID: 0}
