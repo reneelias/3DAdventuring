@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 5230201651827792032}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146,10 +146,12 @@ MonoBehaviour:
   characterController: {fileID: 5230201651827792032}
   materialColor: {r: 0.2627451, g: 0.7764706, b: 0.24705882, a: 0}
   movementSpeed: 0.25
+  inAirMoveDamp: 0.5
   gravityScale: 1
   jumpSpeed: 5
+  moveVelMaxSpeed: 1
+  moveVelSlowRate: 0.1
   raycastPointsParent: {fileID: 4850780482168112174}
-  rayCastOffsetScale: 0.75
   rayCastDistance: 0.35
   turningSpeed: 100
   mouseTurnSpeed: 600
