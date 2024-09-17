@@ -9,6 +9,8 @@ public class PlayerControls : MonoBehaviour
     [Header("Physics")]
     [Tooltip("How quickly the player picks up speed.")]
     [SerializeField] private float movementSpeed = .05f;
+    [Tooltip("Scale by which movement speed gets dampened when player is in the air.")]
+    [SerializeField] private float inAirMoveDamp = .5f;
     [SerializeField] private float gravityScale = .5f;
     [SerializeField] private float jumpSpeed = 3f;
     [Tooltip("That maximum speed that the player can move it using directional input.")]
@@ -69,7 +71,7 @@ public class PlayerControls : MonoBehaviour
                 moveVelocity *= moveVelSlowRate;
             }
         } else {
-            movementVector = movementVector.normalized * movementSpeed;
+            movementVector = movementVector.normalized * movementSpeed * (grounded ? 1f : inAirMoveDamp);
             movementVector = Quaternion.Euler(0f, forwardMovementDirection.y, 0f) * movementVector;
             moveVelocity += movementVector;
             if(moveVelocity.magnitude > moveVelMaxSpeed){
