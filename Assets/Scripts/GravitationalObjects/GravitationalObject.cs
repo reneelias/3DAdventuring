@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class GravitationalObject : MonoBehaviour
 {
-    [Tooltip("Gravity")]
-    [field: SerializeField] public GravityType gravityType{ get; private set; } = GravityType.SinglePoint;
-    [field: SerializeField] public float gravityScale{ get; private set;} = 9.81f;
+    [Header("Gravity")]
     [SerializeField] private GameObject gravityPoint;
-    [Tooltip("Shape")]
-    [field: SerializeField] public ObjectShape objectShape{ get; private set; } = ObjectShape.Sphere;
+    [field: SerializeField] public GravityType GravityType{ get; private set; } = GravityType.SinglePoint;
+    [field: SerializeField] public float GravityScale{ get; private set;} = 9.81f;
+    [Header("Shape")]
     [SerializeField] private Collider gravTriggerCollider;
+    [field: SerializeField] public ObjectShape ObjectShape{ get; private set; } = ObjectShape.Sphere;
 
     
     // Start is called before the first frame update
