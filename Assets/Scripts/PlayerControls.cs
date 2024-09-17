@@ -133,6 +133,20 @@ public class PlayerControls : MonoBehaviour
                 forwardMovementDirection += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
             }
         }
-        
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.tag.Equals("GravObj")){
+            Debug.Log($"Name: {other.name}");
+            GravitationalObject gravObj = other.transform.parent.GetComponent<GravitationalObject>();
+            if(gravObj == null){
+                print("GravObj is null");
+                return;
+            }
+            Debug.Log($"Gravity Type: {gravObj.GravityType}");
+            Debug.Log($"Shape Type: {gravObj.ObjectShape}");
+            Debug.Log($"Gravity Scale: {gravObj.GravityScale}");
+        }
     }
 }
