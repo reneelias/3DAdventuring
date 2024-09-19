@@ -48,6 +48,7 @@ public class PlayerControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateGravity();
         JumpingControls();
         ResetPosition();
         TurningControls();
@@ -93,9 +94,9 @@ public class PlayerControls : MonoBehaviour
     void JumpingControls(){
         int i = 0;
         foreach(Transform transform in raycastPointsParent.transform){
-            if(Physics.Raycast(new Ray(transform.position, Vector3.down), rayCastDistance)){
+            if(Physics.Raycast(new Ray(transform.position, gravity.normalized), rayCastDistance)){
                 if(!grounded){
-                    upVelocity = 0f;
+                    upVector = Vector3.zero;
                 }
                 grounded = true;
                 break;
@@ -108,13 +109,12 @@ public class PlayerControls : MonoBehaviour
 
         if(grounded){
             if(Input.GetKeyDown(KeyCode.Space)){
-                upVelocity = jumpSpeed;
+                upVector = new Vector3(-gravity.x, -gravity.y, -gravity.z).normalized * jumpSpeed;
             }
         } else {
-            upVelocity += gravity.magnitude * gravityScale * Time.deltaTime;
+            upVector += gravity * Time.deltaTime;
         }
         
-        upVector = new Vector3(-gravity.x, -gravity.y, -gravity.z).normalized * upVelocity;
         characterController.Move(upVector * Time.deltaTime);
     }
 
@@ -123,6 +123,9 @@ public class PlayerControls : MonoBehaviour
             characterController.enabled = false;
             transform.position = originalPosition;
             characterController.enabled = true;
+            GravitationalObject = null;
+            transform.eulerAngles = Vector3.zero;
+            forwardMovementDirection = Vector3.forward;
         }
     }
 
@@ -143,6 +146,16 @@ public class PlayerControls : MonoBehaviour
         }
     }
 
+    void UpdateGravity(){
+        if(GravitationalObject == null){
+            gravity = Vector3.down * gravityScale;
+            return;
+        }
+
+        gravity = GravitationalObject.GetGravity(gameObject);
+        transform.eulerAngles = -gravity;
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if(other.tag.Equals("GravObj")){
@@ -155,6 +168,7 @@ public class PlayerControls : MonoBehaviour
             Debug.Log($"Gravity Type: {gravObj.GravityType}");
             Debug.Log($"Shape Type: {gravObj.ObjectShape}");
             Debug.Log($"Gravity Scale: {gravObj.GravityScale}");
+            GravitationalObject = gravObj;
         }
     }
 }

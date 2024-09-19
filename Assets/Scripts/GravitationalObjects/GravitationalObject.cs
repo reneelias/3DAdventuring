@@ -24,11 +24,22 @@ public class GravitationalObject : MonoBehaviour
     {
         
     }
+
+    public Vector3 GetGravity(GameObject otherObj){
+        switch(GravityType){
+            case GravityType.SinglePoint:
+                return (otherObj.transform.position - gravityPoint.transform.position) * GravityScale;
+            case GravityType.SurfaceNormal:
+            default:
+                return Vector3.down * GravityScale;
+        }
+    }
 }
 
 public enum GravityType{
     SinglePoint,
-    SurfaceNormal
+    SurfaceNormal,
+    Generic
 }
 
 public enum ObjectShape{
