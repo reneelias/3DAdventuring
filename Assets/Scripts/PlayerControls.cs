@@ -153,7 +153,8 @@ public class PlayerControls : MonoBehaviour
         }
 
         gravity = GravitationalObject.GetGravity(gameObject);
-        transform.eulerAngles = -gravity;
+        Vector3 posDiff = (transform.position - GravitationalObject.GravityPointTransform.position).normalized;
+        transform.eulerAngles.Set(posDiff.x, forwardMovementDirection.y, posDiff.z);
     }
 
     void OnTriggerEnter(Collider other)

@@ -8,6 +8,7 @@ public class GravitationalObject : MonoBehaviour
     [SerializeField] private GameObject gravityPoint;
     [field: SerializeField] public GravityType GravityType{ get; private set; } = GravityType.SinglePoint;
     [field: SerializeField] public float GravityScale{ get; private set;} = 9.81f;
+    public Transform GravityPointTransform => gravityPoint.transform;
     [Header("Shape")]
     [SerializeField] private Collider gravTriggerCollider;
     [field: SerializeField] public ObjectShape ObjectShape{ get; private set; } = ObjectShape.Sphere;
@@ -28,7 +29,7 @@ public class GravitationalObject : MonoBehaviour
     public Vector3 GetGravity(GameObject otherObj){
         switch(GravityType){
             case GravityType.SinglePoint:
-                return (otherObj.transform.position - gravityPoint.transform.position) * GravityScale;
+                return (gravityPoint.transform.position - otherObj.transform.position) * GravityScale;
             case GravityType.SurfaceNormal:
             default:
                 return Vector3.down * GravityScale;
