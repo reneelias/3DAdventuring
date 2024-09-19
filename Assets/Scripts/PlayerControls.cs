@@ -6,22 +6,30 @@ public class PlayerControls : MonoBehaviour
 {
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Color materialColor;
-    [Header("Physics")]
+
+    [Header("Movement")]
     [Tooltip("How quickly the player picks up speed.")]
     [SerializeField] private float movementSpeed = .05f;
     [Tooltip("Scale by which movement speed gets dampened when player is in the air.")]
     [SerializeField] private float inAirMoveDamp = .5f;
-    [SerializeField] private float gravityScale = .5f;
-    [SerializeField] private float jumpSpeed = 3f;
     [Tooltip("That maximum speed that the player can move it using directional input.")]
     [SerializeField] private float moveVelMaxSpeed = 1f;
     [Tooltip("Scale by which velocity will be multiplied each update when no movement input detected.")]
     [SerializeField] private float moveVelSlowRate = .1f;
     private Vector3 moveVelocity = Vector3.zero;
+
+    [Header("Gravity")]
+    [SerializeField] private float gravityScale = -9.87f;
+    [SerializeField] private float jumpSpeed = 3f;
+    public GravitationalObject GravitationalObject { get; private set;} = null;
+    private Vector3 gravity = Vector3.down;
+    private Vector3 upVector = Vector3.up;
+
     [Header("Jumping Raycast")]
     [SerializeField] private GameObject raycastPointsParent;
     [SerializeField] private float rayCastDistance = .25f;
     private bool grounded = false;
+
     [Header("Turning")]
     [SerializeField] private float turningSpeed = 1f;
     [SerializeField] private float mouseTurnSpeed = 5f;
@@ -103,10 +111,11 @@ public class PlayerControls : MonoBehaviour
                 upVelocity = jumpSpeed;
             }
         } else {
-            upVelocity += Physics.gravity.y * gravityScale * Time.deltaTime;
+            upVelocity += gravity.magnitude * gravityScale * Time.deltaTime;
         }
         
-        characterController.Move(Vector3.up * upVelocity * Time.deltaTime);
+        upVector = new Vector3(-gravity.x, -gravity.y, -gravity.z).normalized * upVelocity;
+        characterController.Move(upVector * Time.deltaTime);
     }
 
     void ResetPosition(){
@@ -114,7 +123,6 @@ public class PlayerControls : MonoBehaviour
             characterController.enabled = false;
             transform.position = originalPosition;
             characterController.enabled = true;
-            // yVelocity = 0f;
         }
     }
 
