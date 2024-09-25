@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
 {
+    [SerializeField] private bool usesRigidbody = true;
+    [SerializeField] private new Rigidbody rigidbody;
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Color materialColor;
 
@@ -88,7 +90,11 @@ public class PlayerControls : MonoBehaviour
             }
         }
 
-        characterController.Move(moveVelocity);
+        if(usesRigidbody){
+            rigidbody.velocity = moveVelocity;
+        } else {
+            characterController.Move(moveVelocity);
+        }
     }
 
     void JumpingControls(){
@@ -110,12 +116,21 @@ public class PlayerControls : MonoBehaviour
         if(grounded){
             if(Input.GetKeyDown(KeyCode.Space)){
                 upVector = new Vector3(-gravity.x, -gravity.y, -gravity.z).normalized * jumpSpeed;
+                if(usesRigidbody){
+                    rigidbody.velocity += upVector;
+                }
             }
         } else {
-            upVector += gravity * Time.deltaTime;
+            if(!usesRigidbody){
+                upVector += gravity * Time.deltaTime;
+            }
         }
         
-        characterController.Move(upVector * Time.deltaTime);
+        // if(usesRigidbody){
+        //     rigidbody.velocity = moveVelocity;
+        // } else {
+            characterController.Move(upVector * Time.deltaTime);
+        // }
     }
 
     void ResetPosition(){
@@ -138,10 +153,12 @@ public class PlayerControls : MonoBehaviour
             if(Input.GetKey(KeyCode.LeftArrow)){
                 transform.eulerAngles += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
                 forwardMovementDirection += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
+                // print(transform.rotation);
             }
             if(Input.GetKey(KeyCode.RightArrow)){
                 transform.eulerAngles += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
                 forwardMovementDirection += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
+                // print(transform.rotation);
             }
         }
     }
@@ -155,6 +172,13 @@ public class PlayerControls : MonoBehaviour
         gravity = GravitationalObject.GetGravity(gameObject);
         Vector3 posDiff = (transform.position - GravitationalObject.GravityPointTransform.position).normalized;
         transform.eulerAngles.Set(posDiff.x, forwardMovementDirection.y, posDiff.z);
+
+        float dotProduct = Vector3.Dot(transform.position, GravitationalObject.GravityPointTransform.position);
+        float angle = Mathf.Acos(dotProduct/(transform.position.magnitude * GravitationalObject.GravityPointTransform.position.magnitude));
+        Debug.Log($"Angle between objects: {angle * Mathf.Rad2Deg}");
+        characterController.enabled = false;
+        transform.eulerAngles = new Vector3(90f, 0f, 0f);
+        characterController.enabled = true;
     }
 
     void OnTriggerEnter(Collider other)
