@@ -473,13 +473,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3531255732513161843, guid: 83c076a65a6fcaa4599358c9e4d20625,
         type: 3}
-      propertyPath: gravityScale
-      value: 9.81
-      objectReference: {fileID: 0}
-    - target: {fileID: 3531255732513161843, guid: 83c076a65a6fcaa4599358c9e4d20625,
-        type: 3}
-      propertyPath: movementSpeed
-      value: 0.5
+      propertyPath: jumpSpeed
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3853593180974075733, guid: 83c076a65a6fcaa4599358c9e4d20625,
         type: 3}
@@ -489,7 +484,7 @@ PrefabInstance:
     - target: {fileID: 7060673730223247283, guid: 83c076a65a6fcaa4599358c9e4d20625,
         type: 3}
       propertyPath: m_Drag
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8449218137469966550, guid: 83c076a65a6fcaa4599358c9e4d20625,
         type: 3}

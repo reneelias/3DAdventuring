@@ -125,6 +125,7 @@ public class PlayerControls : MonoBehaviour
         } else {
             if(usesRigidbody){
                 rigidbody.velocity += gravity * Time.deltaTime;
+                print(rigidbody.velocity);
             } else {
                 upVector += gravity * Time.deltaTime;
             }
