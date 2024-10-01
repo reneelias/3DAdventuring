@@ -147,11 +147,11 @@ MonoBehaviour:
   rigidbody: {fileID: 7060673730223247283}
   characterController: {fileID: 0}
   materialColor: {r: 0.2627451, g: 0.7764706, b: 0.24705882, a: 0}
-  movementSpeed: 0.25
+  movementSpeed: 0.5
   inAirMoveDamp: 0.5
   moveVelMaxSpeed: 1
-  moveVelSlowRate: 0.1
-  gravityScale: 1
+  moveVelDampRate: 0.1
+  gravityScale: 9.81
   jumpSpeed: 5
   raycastPointsParent: {fileID: 4850780482168112174}
   rayCastDistance: 0.35
@@ -239,7 +239,7 @@ Rigidbody:
   m_GameObject: {fileID: 3853593180974075733}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 2
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}

@@ -17,7 +17,7 @@ public class PlayerControls : MonoBehaviour
     [Tooltip("That maximum speed that the player can move it using directional input.")]
     [SerializeField] private float moveVelMaxSpeed = 1f;
     [Tooltip("Scale by which velocity will be multiplied each update when no movement input detected.")]
-    [SerializeField] private float moveVelSlowRate = .1f;
+    [SerializeField] private float moveVelDampRate = .1f;
     private Vector3 moveVelocity = Vector3.zero;
 
     [Header("Gravity")]
@@ -79,7 +79,7 @@ public class PlayerControls : MonoBehaviour
 
         if(movementVector.magnitude == 0f){
             if(moveVelocity.magnitude > 0f){
-                moveVelocity *= moveVelSlowRate;
+                moveVelocity *= moveVelDampRate;
             }
         } else {
             movementVector = movementVector.normalized * movementSpeed * (grounded ? 1f : inAirMoveDamp);
