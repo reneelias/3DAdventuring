@@ -91,7 +91,9 @@ public class PlayerControls : MonoBehaviour
         }
 
         if(usesRigidbody){
-            rigidbody.velocity = moveVelocity;
+            rigidbody.velocity += movementVector;
+            rigidbody.rotation = Quaternion.Euler(0f, rigidbody.rotation.eulerAngles.y, 0f);
+            rigidbody.angularVelocity = Vector3.zero;
         } else {
             characterController.Move(moveVelocity);
         }
@@ -121,23 +123,31 @@ public class PlayerControls : MonoBehaviour
                 }
             }
         } else {
-            if(!usesRigidbody){
+            if(usesRigidbody){
+                rigidbody.velocity += gravity * Time.deltaTime;
+            } else {
                 upVector += gravity * Time.deltaTime;
             }
         }
         
-        // if(usesRigidbody){
-        //     rigidbody.velocity = moveVelocity;
-        // } else {
+        if(usesRigidbody){
+            // rigidbody.velocity = moveVelocity;
+        } else {
             characterController.Move(upVector * Time.deltaTime);
-        // }
+        }
     }
 
     void ResetPosition(){
         if(Input.GetKeyDown(KeyCode.R)){
-            characterController.enabled = false;
-            transform.position = originalPosition;
-            characterController.enabled = true;
+            if(usesRigidbody){
+                transform.position = originalPosition;
+                rigidbody.velocity = Vector3.zero;
+                rigidbody.angularVelocity = Vector3.zero;
+            } else {
+                characterController.enabled = false;
+                transform.position = originalPosition;
+                characterController.enabled = true;
+            }
             GravitationalObject = null;
             transform.eulerAngles = Vector3.zero;
             forwardMovementDirection = Vector3.forward;
@@ -176,9 +186,13 @@ public class PlayerControls : MonoBehaviour
         float dotProduct = Vector3.Dot(transform.position, GravitationalObject.GravityPointTransform.position);
         float angle = Mathf.Acos(dotProduct/(transform.position.magnitude * GravitationalObject.GravityPointTransform.position.magnitude));
         Debug.Log($"Angle between objects: {angle * Mathf.Rad2Deg}");
-        characterController.enabled = false;
-        transform.eulerAngles = new Vector3(90f, 0f, 0f);
-        characterController.enabled = true;
+        if(usesRigidbody){
+            transform.eulerAngles = new Vector3(90f, 0f, 0f);
+        } else {
+            characterController.enabled = false;
+            transform.eulerAngles = new Vector3(90f, 0f, 0f);
+            characterController.enabled = true;
+        }
     }
 
     void OnTriggerEnter(Collider other)

@@ -143,6 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9258b2fd4978b3d41ba7c91d9c2ccc5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  usesRigidbody: 1
+  rigidbody: {fileID: 7060673730223247283}
   characterController: {fileID: 0}
   materialColor: {r: 0.2627451, g: 0.7764706, b: 0.24705882, a: 0}
   movementSpeed: 0.25
@@ -250,7 +252,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
