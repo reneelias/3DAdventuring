@@ -29,7 +29,7 @@ public class GravitationalObject : MonoBehaviour
     public Vector3 GetGravity(GameObject otherObj){
         switch(GravityType){
             case GravityType.SinglePoint:
-                return (gravityPoint.transform.position - otherObj.transform.position) * GravityScale;
+                return (gravityPoint.transform.position - otherObj.transform.position).normalized * GravityScale;
             case GravityType.SurfaceNormal:
             default:
                 return Vector3.down * GravityScale;

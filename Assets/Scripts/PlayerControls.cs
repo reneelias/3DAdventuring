@@ -39,6 +39,7 @@ public class PlayerControls : MonoBehaviour
     private Vector3 movementVector = new Vector3();
     private Vector3 originalPosition;
     private Vector3 forwardMovementDirection = Vector3.forward;
+    private float leftRightRotation = 0;
     
     // Start is called before the first frame update
     void Start()
@@ -110,6 +111,8 @@ public class PlayerControls : MonoBehaviour
             print($"Back Vector: {Vector3.back}");
             print($"Left Vector: {Vector3.left}");
             print($"Right Vector: {Vector3.right}");
+            print($"Gravity: {gravity}");
+            print($"GravRotation: {gravRotation}");
             yield return new WaitForSecondsRealtime(2);
         }
     }
@@ -175,40 +178,36 @@ public class PlayerControls : MonoBehaviour
         if(axisMouseX != 0 && Input.GetMouseButton(1)){
             transform.eulerAngles += new Vector3(0, axisMouseX * mouseTurnSpeed * Time.deltaTime, 0f);
             forwardMovementDirection += new Vector3(0, axisMouseX * mouseTurnSpeed * Time.deltaTime, 0f);
+            leftRightRotation += axisMouseX * mouseTurnSpeed * Time.deltaTime;
         } else {
             if(Input.GetKey(KeyCode.LeftArrow)){
                 transform.eulerAngles += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
                 forwardMovementDirection += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
+                leftRightRotation += axisMouseX * mouseTurnSpeed * Time.deltaTime;
                 // print(transform.rotation);
             }
             if(Input.GetKey(KeyCode.RightArrow)){
                 transform.eulerAngles += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
                 forwardMovementDirection += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
+                leftRightRotation += axisMouseX * mouseTurnSpeed * Time.deltaTime;
                 // print(transform.rotation);
             }
         }
     }
-
+    Quaternion gravRotation;
     void UpdateGravity(){
         if(GravitationalObject == null){
             gravity = Vector3.down * gravityScale;
             return;
         }
-
         gravity = GravitationalObject.GetGravity(gameObject);
-        Vector3 posDiff = (transform.position - GravitationalObject.GravityPointTransform.position).normalized;
-        transform.eulerAngles.Set(posDiff.x, forwardMovementDirection.y, posDiff.z);
-        Quaternion gravRotation = Quaternion.FromToRotation(Vector3.down, gravity);
-        transform.eulerAngles = gravRotation * Vector3.zero;
+        gravRotation = Quaternion.FromToRotation(Vector3.down, gravity);
 
-        float dotProduct = Vector3.Dot(transform.position, GravitationalObject.GravityPointTransform.position);
-        float angle = Mathf.Acos(dotProduct/(transform.position.magnitude * GravitationalObject.GravityPointTransform.position.magnitude));
-        // Debug.Log($"Angle between objects: {angle * Mathf.Rad2Deg}");
         if(usesRigidbody){
-            transform.eulerAngles = new Vector3(90f, 0f, 0f);
+            transform.rotation = gravRotation;
         } else {
             characterController.enabled = false;
-            transform.eulerAngles = new Vector3(90f, 0f, 0f);
+            transform.rotation = gravRotation;
             characterController.enabled = true;
         }
     }
