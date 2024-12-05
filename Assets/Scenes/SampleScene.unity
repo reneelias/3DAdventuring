@@ -476,6 +476,16 @@ PrefabInstance:
       propertyPath: jumpSpeed
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 3531255732513161843, guid: 83c076a65a6fcaa4599358c9e4d20625,
+        type: 3}
+      propertyPath: movementSpeed
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3531255732513161843, guid: 83c076a65a6fcaa4599358c9e4d20625,
+        type: 3}
+      propertyPath: moveVelDampRate
+      value: 0.9
+      objectReference: {fileID: 0}
     - target: {fileID: 3853593180974075733, guid: 83c076a65a6fcaa4599358c9e4d20625,
         type: 3}
       propertyPath: m_Name

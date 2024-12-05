@@ -45,6 +45,7 @@ public class PlayerControls : MonoBehaviour
     {
         originalPosition = transform.position;
         GetComponent<Renderer>().material.color = materialColor;
+        StartCoroutine(printVectors());
     }
 
     // Update is called once per frame
@@ -79,7 +80,11 @@ public class PlayerControls : MonoBehaviour
 
         if(movementVector.magnitude == 0f){
             if(moveVelocity.magnitude > 0f){
-                moveVelocity *= moveVelDampRate;
+                if(usesRigidbody && grounded){
+                    rigidbody.velocity *= moveVelDampRate;
+                } else {
+                    moveVelocity *= moveVelDampRate;
+                }
             }
         } else {
             movementVector = movementVector.normalized * movementSpeed * (grounded ? 1f : inAirMoveDamp);
@@ -96,6 +101,16 @@ public class PlayerControls : MonoBehaviour
             rigidbody.angularVelocity = Vector3.zero;
         } else {
             characterController.Move(moveVelocity);
+        }
+    }
+
+    IEnumerator printVectors(){
+        while(true){
+            print($"Forward Vector: {Vector3.forward}");
+            print($"Back Vector: {Vector3.back}");
+            print($"Left Vector: {Vector3.left}");
+            print($"Right Vector: {Vector3.right}");
+            yield return new WaitForSecondsRealtime(2);
         }
     }
 
@@ -125,7 +140,7 @@ public class PlayerControls : MonoBehaviour
         } else {
             if(usesRigidbody){
                 rigidbody.velocity += gravity * Time.deltaTime;
-                print(rigidbody.velocity);
+                // print(rigidbody.velocity);
             } else {
                 upVector += gravity * Time.deltaTime;
             }
@@ -183,10 +198,12 @@ public class PlayerControls : MonoBehaviour
         gravity = GravitationalObject.GetGravity(gameObject);
         Vector3 posDiff = (transform.position - GravitationalObject.GravityPointTransform.position).normalized;
         transform.eulerAngles.Set(posDiff.x, forwardMovementDirection.y, posDiff.z);
+        Quaternion gravRotation = Quaternion.FromToRotation(Vector3.down, gravity);
+        transform.eulerAngles = gravRotation * Vector3.zero;
 
         float dotProduct = Vector3.Dot(transform.position, GravitationalObject.GravityPointTransform.position);
         float angle = Mathf.Acos(dotProduct/(transform.position.magnitude * GravitationalObject.GravityPointTransform.position.magnitude));
-        Debug.Log($"Angle between objects: {angle * Mathf.Rad2Deg}");
+        // Debug.Log($"Angle between objects: {angle * Mathf.Rad2Deg}");
         if(usesRigidbody){
             transform.eulerAngles = new Vector3(90f, 0f, 0f);
         } else {
