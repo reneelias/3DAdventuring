@@ -46,7 +46,7 @@ public class PlayerControls : MonoBehaviour
     {
         originalPosition = transform.position;
         GetComponent<Renderer>().material.color = materialColor;
-        StartCoroutine(printVectors());
+        StartCoroutine(printValues());
     }
 
     // Update is called once per frame
@@ -105,14 +105,12 @@ public class PlayerControls : MonoBehaviour
         }
     }
 
-    IEnumerator printVectors(){
+    IEnumerator printValues(){
         while(true){
-            print($"Forward Vector: {Vector3.forward}");
-            print($"Back Vector: {Vector3.back}");
-            print($"Left Vector: {Vector3.left}");
-            print($"Right Vector: {Vector3.right}");
             print($"Gravity: {gravity}");
-            print($"GravRotation: {gravRotation}");
+            print($"gravRotation: {gravRotation}");
+            print($"leftRightRotation: {leftRightRotation}");
+            print($"rotated y vector: {gravRotation * new Vector3(0, leftRightRotation, 0f)}");
             yield return new WaitForSecondsRealtime(2);
         }
     }
@@ -170,41 +168,44 @@ public class PlayerControls : MonoBehaviour
             GravitationalObject = null;
             transform.eulerAngles = Vector3.zero;
             forwardMovementDirection = Vector3.forward;
+            leftRightRotation = 0;
         }
     }
 
     void TurningControls(){
         float axisMouseX = Input.GetAxis("Mouse X");
         if(axisMouseX != 0 && Input.GetMouseButton(1)){
-            transform.eulerAngles += new Vector3(0, axisMouseX * mouseTurnSpeed * Time.deltaTime, 0f);
+            // transform.eulerAngles += new Vector3(0, axisMouseX * mouseTurnSpeed * Time.deltaTime, 0f);
             forwardMovementDirection += new Vector3(0, axisMouseX * mouseTurnSpeed * Time.deltaTime, 0f);
             leftRightRotation += axisMouseX * mouseTurnSpeed * Time.deltaTime;
         } else {
             if(Input.GetKey(KeyCode.LeftArrow)){
-                transform.eulerAngles += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
+                // transform.eulerAngles += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
                 forwardMovementDirection += new Vector3(0, -turningSpeed * Time.deltaTime, 0f);
-                leftRightRotation += axisMouseX * mouseTurnSpeed * Time.deltaTime;
+                leftRightRotation += -turningSpeed * Time.deltaTime;
                 // print(transform.rotation);
             }
             if(Input.GetKey(KeyCode.RightArrow)){
-                transform.eulerAngles += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
+                // transform.eulerAngles += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
                 forwardMovementDirection += new Vector3(0, turningSpeed * Time.deltaTime, 0f);
-                leftRightRotation += axisMouseX * mouseTurnSpeed * Time.deltaTime;
+                leftRightRotation += turningSpeed * Time.deltaTime;
                 // print(transform.rotation);
             }
         }
     }
-    Quaternion gravRotation;
+    Quaternion gravRotation = new Quaternion();
     void UpdateGravity(){
         if(GravitationalObject == null){
             gravity = Vector3.down * gravityScale;
-            return;
+        } else {
+            gravity = GravitationalObject.GetGravity(gameObject);
         }
-        gravity = GravitationalObject.GetGravity(gameObject);
         gravRotation = Quaternion.FromToRotation(Vector3.down, gravity);
 
         if(usesRigidbody){
             transform.rotation = gravRotation;
+            transform.eulerAngles += gravRotation * new Vector3(0, leftRightRotation, 0f);
+            // transform.eulerAngles += gravity.normalized * -1 * leftRightRotation;
         } else {
             characterController.enabled = false;
             transform.rotation = gravRotation;
