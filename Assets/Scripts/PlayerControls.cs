@@ -203,7 +203,8 @@ public class PlayerControls : MonoBehaviour
         gravRotation = Quaternion.FromToRotation(Vector3.down, gravity);
 
         if(usesRigidbody){
-            transform.rotation = gravRotation;
+            // transform.rotation = gravRotation;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, gravRotation, .5f);
             transform.eulerAngles += gravRotation * new Vector3(0, leftRightRotation, 0f);
             // transform.eulerAngles += gravity.normalized * -1 * leftRightRotation;
         } else {
